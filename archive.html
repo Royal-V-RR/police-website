@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCPD — Restricted Archive</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #152336;
+      --navy-light: #1e3452;
+      --steel: #3a5270;
+      --gold: #b8922a;
+      --gold-light: #d4aa44;
+      --cream: #e8e0d0;
+      --paper: #f0ebe0;
+      --red: #8b1a1a;
+      --red-alert: #c0392b;
+      --text-dark: #1a1a1a;
+      --text-mid: #444;
+      --divider: #2e4a6a;
+      --redact: #111;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--paper);
+      font-family: 'Source Serif 4', Georgia, serif;
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--navy);
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 32px;
+    }
+
+    .header-logo { width: 60px; height: 60px; flex-shrink: 0; }
+
+    .header-title h1 {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--cream);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .header-title .subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border: 1px solid #a52222;
+    }
+
+    .back-link {
+      color: rgba(184,146,42,0.7);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 5px 12px;
+      border: 1px solid rgba(184,146,42,0.3);
+    }
+
+    .back-link:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .archive-wrap {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 0;
+    }
+
+    /* ── SIDEBAR ── */
+    .archive-sidebar {
+      background: var(--navy-mid);
+      min-height: calc(100vh - 90px);
+      padding: 24px 0;
+      border-right: 2px solid var(--divider);
+    }
+
+    .sidebar-header {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 0 20px 14px;
+      border-bottom: 1px solid var(--divider);
+      margin-bottom: 8px;
+    }
+
+    .sidebar-seal {
+      display: flex;
+      justify-content: center;
+      padding: 16px 0 20px;
+      border-bottom: 1px solid var(--divider);
+      margin-bottom: 8px;
+    }
+
+    .sidebar-seal img {
+      width: 80px;
+      height: 80px;
+      opacity: 0.85;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(46,74,106,0.5);
+      transition: background 0.15s;
+    }
+
+    .sidebar-nav-item:hover { background: rgba(30,52,82,0.6); }
+    .sidebar-nav-item.active { background: var(--navy-light); border-left: 3px solid var(--gold); padding-left: 17px; }
+
+    .sidebar-nav-item .sni-icon { font-size: 1rem; flex-shrink: 0; }
+
+    .sidebar-nav-item .sni-text {
+      flex: 1;
+    }
+
+    .sidebar-nav-item .sni-label {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar-nav-item .sni-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(184,146,42,0.6);
+      letter-spacing: 0.06em;
+    }
+
+    .sni-lock {
+      font-size: 0.72rem;
+      color: rgba(200,200,200,0.3);
+    }
+
+    /* ── MAIN ARCHIVE CONTENT ── */
+    .archive-main {
+      padding: 28px 36px;
+    }
+
+    /* ── SUMMARY SECTION ── */
+    .section-block {
+      display: none;
+    }
+    .section-block.visible { display: block; }
+
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--navy);
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--navy);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title .tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 2px 8px;
+      letter-spacing: 0.1em;
+    }
+
+    .doc-box {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-top: 3px solid var(--navy);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+
+    .doc-meta {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .doc-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .doc-body {
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+    }
+
+    /* Redaction */
+    .redact {
+      background: var(--redact);
+      color: var(--redact);
+      border-radius: 2px;
+      padding: 0 2px;
+      user-select: none;
+      display: inline-block;
+    }
+
+    /* ── PASSWORD-LOCKED ENTRIES ── */
+    .locked-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .locked-entry {
+      background: #fff;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .locked-entry:hover { border-color: var(--navy); background: #f8f4ec; }
+
+    .locked-entry.unlocked { border-left: 3px solid #2e8b57; }
+
+    .le-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    .le-info { flex: 1; }
+
+    .le-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--navy);
+    }
+
+    .le-meta {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem;
+      color: #888;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .le-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      padding: 3px 8px;
+      border: 1px solid;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .le-badge.locked { border-color: var(--red); color: var(--red); }
+    .le-badge.free   { border-color: #2e8b57; color: #2e8b57; }
+
+    /* ── CONTENT VIEWER ── */
+    .content-viewer {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-top: 3px solid var(--navy);
+      padding: 24px 28px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .content-viewer.open { display: block; }
+
+    .cv-header {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: #888;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 14px;
+    }
+
+    .cv-title {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 14px;
+    }
+
+    .cv-body {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--text-mid);
+    }
+
+    .audio-player {
+      background: var(--navy);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 10px 0;
+    }
+
+    .audio-play-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .audio-info {
+      flex: 1;
+    }
+
+    .audio-info .ai-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.8rem;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+
+    .audio-info .ai-meta {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(184,146,42,0.7);
+      letter-spacing: 0.08em;
+    }
+
+    .audio-waveform {
+      flex: 1;
+      height: 28px;
+      background: rgba(30,52,82,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .audio-waveform::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(184,146,42,0.3) 0px, rgba(184,146,42,0.3) 1px,
+        transparent 1px, transparent 3px,
+        rgba(184,146,42,0.5) 3px, rgba(184,146,42,0.5) 4px,
+        transparent 4px, transparent 7px
+      );
+    }
+
+    .video-placeholder {
+      background: #111;
+      aspect-ratio: 16/9;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0;
+      border: 1px solid #333;
+    }
+
+    .video-placeholder span:first-child { font-size: 2.5rem; }
+
+    .video-placeholder span:last-child {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: #555;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── MINI PASSWORD PROMPT inline ── */
+    .inline-lock {
+      background: #f8f0d4;
+      border: 1px solid #d4aa44;
+      border-left: 3px solid var(--gold);
+      padding: 14px 18px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .inline-lock.show { display: block; }
+
+    .inline-lock p {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .inline-lock-row {
+      display: flex;
+      gap: 0;
+    }
+
+    .inline-lock-row input {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-right: none;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
+      padding: 7px 12px;
+      outline: none;
+      letter-spacing: 0.08em;
+    }
+
+    .inline-lock-row button {
+      background: var(--navy);
+      color: var(--cream);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      padding: 7px 16px;
+      cursor: pointer;
+    }
+
+    .lock-error {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--red);
+      margin-top: 6px;
+      display: none;
+    }
+    .lock-error.show { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <img class="header-logo" src="image.png" alt="PCPD Seal">
+    <div class="header-title">
+      <h1>Procyon Police Department</h1>
+      <div class="subtitle">Restricted Archive — Authorised Access Only</div>
+    </div>
+    <a class="back-link" href="index.html">← Return to Main Site</a>
+    <div class="header-badge">⚿ Restricted</div>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="archive-wrap">
+
+  <!-- SIDEBAR NAV -->
+  <aside class="archive-sidebar">
+    <div class="sidebar-seal">
+      <img src="image.png" alt="P.C.P.D.">
+    </div>
+    <div class="sidebar-header">Archive Sections</div>
+
+    <div class="sidebar-nav-item active" onclick="showSection('summary')">
+      <div class="sni-icon">📄</div>
+      <div class="sni-text">
+        <div class="sni-label">Case Summary</div>
+        <div class="sni-sub">Officer Brooks — Free Access</div>
+      </div>
+    </div>
+
+    <div class="sidebar-nav-item" onclick="showSection('audio')">
+      <div class="sni-icon">🎙️</div>
+      <div class="sni-text">
+        <div class="sni-label">Audio Logs</div>
+        <div class="sni-sub">3 entries — password protected</div>
+      </div>
+      <div class="sni-lock">🔒</div>
+    </div>
+
+    <div class="sidebar-nav-item" onclick="showSection('newspaper')">
+      <div class="sni-icon">📰</div>
+      <div class="sni-text">
+        <div class="sni-label">Newspaper Articles</div>
+        <div class="sni-sub">5 entries — password protected</div>
+      </div>
+      <div class="sni-lock">🔒</div>
+    </div>
+
+    <div class="sidebar-nav-item" onclick="showSection('video')">
+      <div class="sni-icon">📹</div>
+      <div class="sni-text">
+        <div class="sni-label">Video Logs</div>
+        <div class="sni-sub">2 entries — password protected</div>
+      </div>
+      <div class="sni-lock">🔒</div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="archive-main">
+
+    <!-- CASE SUMMARY (free) -->
+    <div class="section-block visible" id="section-summary">
+      <div class="section-title">
+        Case Summary — Officer Luke Brooks
+        <span class="tag">Free Access</span>
+      </div>
+
+      <div class="doc-box">
+        <div class="doc-meta">
+          <span>REF: PCPD-INV-0044</span>
+          <span>Compiled by: L. Brooks</span>
+          <span>Classification: Restricted</span>
+        </div>
+        <div class="doc-title">Summary of Known Information — Westgate District Incident Series</div>
+        <div class="doc-body">
+          <p>The following constitutes a partial summary of known facts pertaining to the ongoing investigation into unexplained incidents in the Westgate District of Procyon City. This document has been reviewed and <span class="redact">selected passages have been redacted</span> at the discretion of <span class="redact">████████ ████████</span>, in accordance with Internal Protocol 7-C.</p>
+          <br>
+          <p>Beginning approximately <span class="redact">██ weeks</span> ago, the department began receiving reports of unusual activity near the <span class="redact">████████</span> sector of Westgate. Initial assessments classified these as unrelated incidents. Further review by this officer suggests a pattern that <span class="redact">██████████████████████████████████████████████</span>.</p>
+          <br>
+          <p>Three individuals have been identified as persons of interest. Their names are being withheld pending further inquiry. One individual, referred to in internal communications as <span class="redact">████████</span>, was last seen in the vicinity of <span class="redact">████████ Street</span> on the evening of <span class="redact">██/██/YR3</span>.</p>
+          <br>
+          <p>The department's position, as stated in the most recent briefing, is that there is <em>"no cause for public alarm at this time."</em> This officer's personal assessment differs. The full analysis is contained in the audio and document logs accessible via the restricted sections of this archive.</p>
+          <br>
+          <p style="color:#888;font-size:0.8rem;font-style:italic;">Note: Further detail — including audio field recordings, intercepted communications, and linked newspaper coverage — is available in the sections to the left. Each is protected by individual passwords distributed on a need-to-know basis.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- AUDIO LOGS -->
+    <div class="section-block" id="section-audio">
+      <div class="section-title">
+        Audio Logs
+        <span class="tag">Password Protected</span>
+      </div>
+
+      <div class="locked-list">
+
+        <div class="locked-entry" id="audio-entry-1" onclick="toggleLock('audio-1', 'audio-entry-1')">
+          <div class="le-icon">🎙️</div>
+          <div class="le-info">
+            <div class="le-title">Field Recording — Westgate, Night of ██/██/YR3</div>
+            <div class="le-meta">AUDIO-LOG-001 · Duration: 4m 32s · Recorded by L. Brooks</div>
+          </div>
+          <div class="le-badge locked" id="badge-audio-1">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-audio-1">
+          <p>🔒 Enter password to access this log</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-audio-1" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('audio-1','audio-entry-1','content-audio-1')">
+            <button onclick="checkLock('audio-1','audio-entry-1','content-audio-1')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-audio-1">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-audio-1">
+          <div class="cv-header">PCPD AUDIO LOG · AUDIO-LOG-001 · RESTRICTED</div>
+          <div class="cv-title">Field Recording — Westgate, Night Patrol</div>
+          <div class="audio-player">
+            <button class="audio-play-btn">▶</button>
+            <div class="audio-info">
+              <div class="ai-title">Audio Log 001 — L. Brooks</div>
+              <div class="ai-meta">4:32 · WESTGATE · YR3</div>
+            </div>
+            <div class="audio-waveform"></div>
+          </div>
+          <div class="cv-body">
+            <p><em>[Transcript — partial]</em></p><br>
+            <p><strong>Brooks:</strong> ...recording now. Time is approximately 22:40. I'm on foot near the old warehouse block, east end of Westgate. The light I reported last week — it's back. Same position, same colour. I can't explain it. Building should be empty, condemned since...</p>
+            <p><em>[static]</em></p>
+            <p><strong>Brooks:</strong> Something's moving. I'm going to— [pause] —no, I'm staying here. I can see a figure. Too far away to make out features. It's standing very still.</p>
+            <p><em>[end of recovered segment]</em></p>
+          </div>
+        </div>
+
+        <div class="locked-entry" id="audio-entry-2" onclick="toggleLock('audio-2', 'audio-entry-2')">
+          <div class="le-icon">🎙️</div>
+          <div class="le-info">
+            <div class="le-title">Dispatch Intercept — Channel 7 Fragment</div>
+            <div class="le-meta">AUDIO-LOG-002 · Duration: 1m 08s · Source: [redacted]</div>
+          </div>
+          <div class="le-badge locked" id="badge-audio-2">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-audio-2">
+          <p>🔒 Enter password to access this log</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-audio-2" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('audio-2','audio-entry-2','content-audio-2')">
+            <button onclick="checkLock('audio-2','audio-entry-2','content-audio-2')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-audio-2">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-audio-2">
+          <div class="cv-header">PCPD AUDIO LOG · AUDIO-LOG-002 · RESTRICTED</div>
+          <div class="cv-title">Dispatch Intercept</div>
+          <div class="audio-player">
+            <button class="audio-play-btn">▶</button>
+            <div class="audio-info">
+              <div class="ai-title">Dispatch Intercept — Channel 7</div>
+              <div class="ai-meta">1:08 · ORIGIN UNKNOWN · YR3</div>
+            </div>
+            <div class="audio-waveform"></div>
+          </div>
+          <div class="cv-body">
+            <p><em>[Transcript — partial, quality degraded]</em></p><br>
+            <p><strong>[Unknown voice]:</strong> ...they don't know yet. Keep it quiet until the — [static] — festival. After that it doesn't matter what they find.</p>
+            <p><em>[end of recovered segment]</em></p>
+          </div>
+        </div>
+
+        <div class="locked-entry" id="audio-entry-3" onclick="toggleLock('audio-3', 'audio-entry-3')">
+          <div class="le-icon">🎙️</div>
+          <div class="le-info">
+            <div class="le-title">Interview Recording — Witness A (Anonymous)</div>
+            <div class="le-meta">AUDIO-LOG-003 · Duration: 12m 17s · Recorded by L. Brooks</div>
+          </div>
+          <div class="le-badge locked" id="badge-audio-3">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-audio-3">
+          <p>🔒 Enter password to access this log</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-audio-3" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('audio-3','audio-entry-3','content-audio-3')">
+            <button onclick="checkLock('audio-3','audio-entry-3','content-audio-3')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-audio-3">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-audio-3">
+          <div class="cv-header">PCPD AUDIO LOG · AUDIO-LOG-003 · RESTRICTED</div>
+          <div class="cv-title">Witness Interview — Anonymous</div>
+          <div class="audio-player">
+            <button class="audio-play-btn">▶</button>
+            <div class="audio-info">
+              <div class="ai-title">Witness A Interview — L. Brooks</div>
+              <div class="ai-meta">12:17 · PCPD HQ · YR3</div>
+            </div>
+            <div class="audio-waveform"></div>
+          </div>
+          <div class="cv-body">
+            <p><em>[Transcript — excerpt only]</em></p><br>
+            <p><strong>Brooks:</strong> Can you describe what you saw?</p>
+            <p><strong>Witness A:</strong> I've already told the other officers. Nobody believed me then either.</p>
+            <p><strong>Brooks:</strong> I'm listening.</p>
+            <p><strong>Witness A:</strong> It was fast. Too fast to be... I don't know how to explain it. It came from the alley and then it was just — gone. There was a sound like static, or maybe like... like a frequency. Something you feel more than hear.</p>
+            <p><strong>Brooks:</strong> Did you see a face?</p>
+            <p><strong>Witness A:</strong> <em>[long pause]</em> I don't want to describe it.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- NEWSPAPER ARTICLES -->
+    <div class="section-block" id="section-newspaper">
+      <div class="section-title">
+        Newspaper Articles
+        <span class="tag">Password Protected</span>
+      </div>
+
+      <p style="font-size:0.82rem;color:#666;margin-bottom:16px;line-height:1.5;">The following articles have been flagged as relevant to ongoing investigations. Each is password-protected. Contact Officer Brooks for access codes.</p>
+
+      <div class="locked-list">
+
+        <div class="locked-entry" onclick="toggleLock('news-1', 'ne-1')">
+          <div class="le-icon">📰</div>
+          <div class="le-info">
+            <div class="le-title">"Westgate Residents Report Disturbing Sightings" — Procyon Courier</div>
+            <div class="le-meta">ARTICLE-001 · Procyon Courier · YR3-06-02</div>
+          </div>
+          <div class="le-badge locked" id="badge-news-1">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-news-1">
+          <p>🔒 Enter password</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-news-1" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('news-1','ne-1','content-news-1')">
+            <button onclick="checkLock('news-1','ne-1','content-news-1')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-news-1">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-news-1">
+          <div class="cv-header">PROCYON COURIER · ARCHIVE · YR3-06-02</div>
+          <div class="cv-title">Westgate Residents Report Disturbing Sightings</div>
+          <div class="cv-body">
+            <p>Several residents of the Westgate District have come forward this week to report what they describe as unexplained phenomena near the disused warehouse block on Copperfield Lane. The Procyon Police Department confirmed it is "aware of the reports" but declined to provide further comment.</p>
+            <br>
+            <p>One resident, who asked not to be named, told the Courier: "Something's not right down there. I've lived here twenty years and I've never seen anything like it."</p>
+            <br>
+            <p>The PCPD's public statement characterised the incidents as "under routine review."</p>
+          </div>
+        </div>
+
+        <div class="locked-entry" id="ne-2" onclick="toggleLock('news-2', 'ne-2')">
+          <div class="le-icon">📰</div>
+          <div class="le-info">
+            <div class="le-title">"City Festival Proceeds Despite Safety Concerns" — The Daily Procyon</div>
+            <div class="le-meta">ARTICLE-002 · The Daily Procyon · YR3-06-08</div>
+          </div>
+          <div class="le-badge locked" id="badge-news-2">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-news-2">
+          <p>🔒 Enter password</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-news-2" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('news-2','ne-2','content-news-2')">
+            <button onclick="checkLock('news-2','ne-2','content-news-2')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-news-2">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-news-2">
+          <div class="cv-header">THE DAILY PROCYON · ARCHIVE · YR3-06-08</div>
+          <div class="cv-title">City Festival Proceeds Despite Safety Concerns</div>
+          <div class="cv-body">
+            <p>The Procyon City Annual Festival is set to proceed as planned despite calls from some residents to delay the event pending clarification of the ongoing situation in Westgate. City officials maintained that "there is no credible threat to public safety."</p>
+          </div>
+        </div>
+
+        <div class="locked-entry" id="ne-3" onclick="toggleLock('news-3','ne-3')">
+          <div class="le-icon">📰</div>
+          <div class="le-info">
+            <div class="le-title">"Missing: Three Residents Unaccounted For" — Procyon Courier</div>
+            <div class="le-meta">ARTICLE-003 · Procyon Courier · YR3-05-28</div>
+          </div>
+          <div class="le-badge locked" id="badge-news-3">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-news-3">
+          <p>🔒 Enter password</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-news-3" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('news-3','ne-3','content-news-3')">
+            <button onclick="checkLock('news-3','ne-3','content-news-3')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-news-3">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-news-3">
+          <div class="cv-header">PROCYON COURIER · ARCHIVE · YR3-05-28</div>
+          <div class="cv-title">Missing: Three Residents Unaccounted For</div>
+          <div class="cv-body">
+            <p>Three individuals were reported missing to the Procyon Police Department over the past ten days, all of whom were last known to be in or near the Westgate District. Police have not confirmed whether the cases are connected.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- VIDEO LOGS -->
+    <div class="section-block" id="section-video">
+      <div class="section-title">
+        Video Logs
+        <span class="tag">Password Protected</span>
+      </div>
+
+      <div class="locked-list">
+
+        <div class="locked-entry" id="ve-1" onclick="toggleLock('vid-1','ve-1')">
+          <div class="le-icon">📹</div>
+          <div class="le-info">
+            <div class="le-title">CCTV Footage — Copperfield Lane, 22:38–22:54, ██/██/YR3</div>
+            <div class="le-meta">VIDEO-LOG-001 · Source: City CCTV · Duration: 16m</div>
+          </div>
+          <div class="le-badge locked" id="badge-vid-1">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-vid-1">
+          <p>🔒 Enter password</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-vid-1" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('vid-1','ve-1','content-vid-1')">
+            <button onclick="checkLock('vid-1','ve-1','content-vid-1')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-vid-1">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-vid-1">
+          <div class="cv-header">PCPD VIDEO LOG · VIDEO-LOG-001 · CCTV FOOTAGE</div>
+          <div class="cv-title">CCTV — Copperfield Lane</div>
+          <div class="video-placeholder">
+            <span>📹</span>
+            <span>Video file not yet uploaded — placeholder</span>
+          </div>
+          <div class="cv-body">
+            <p style="font-size:0.78rem;color:#888;font-style:italic;">Note: Source footage pulled from Procyon City CCTV archive. At 22:46 an anomaly is visible for approximately 3 seconds. Nature of anomaly under review. Do not distribute.</p>
+          </div>
+        </div>
+
+        <div class="locked-entry" id="ve-2" onclick="toggleLock('vid-2','ve-2')">
+          <div class="le-icon">📹</div>
+          <div class="le-info">
+            <div class="le-title">Personal Footage — Officer Brooks, Body Camera, ██/██/YR3</div>
+            <div class="le-meta">VIDEO-LOG-002 · Source: PCPD Body Cam · Duration: 8m 42s</div>
+          </div>
+          <div class="le-badge locked" id="badge-vid-2">Locked</div>
+        </div>
+        <div class="inline-lock" id="lock-vid-2">
+          <p>🔒 Enter password</p>
+          <div class="inline-lock-row">
+            <input type="password" id="pw-vid-2" placeholder="Password…" onkeydown="if(event.key==='Enter')checkLock('vid-2','ve-2','content-vid-2')">
+            <button onclick="checkLock('vid-2','ve-2','content-vid-2')">Unlock</button>
+          </div>
+          <div class="lock-error" id="err-vid-2">Access denied.</div>
+        </div>
+        <div class="content-viewer" id="content-vid-2">
+          <div class="cv-header">PCPD VIDEO LOG · VIDEO-LOG-002 · BODY CAMERA</div>
+          <div class="cv-title">Officer Brooks — Body Camera Footage</div>
+          <div class="video-placeholder">
+            <span>📹</span>
+            <span>Video file not yet uploaded — placeholder</span>
+          </div>
+          <div class="cv-body">
+            <p style="font-size:0.78rem;color:#888;font-style:italic;">Note: Body cam footage from patrol referenced in Audio Log 001. Camera suffered interference between 22:43 and 22:47. Footage from that window is corrupted. Recovered segments retained.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Individual passwords for each locked item — tuxe can customise these
+  const passwords = {
+    'audio-1': '85491',
+    'audio-2': '!qk95rtp2',
+    'audio-3': '378',
+    'news-1':  'LRSN',
+    'news-2':  'LRSN',
+    'news-3':  'LRSN',
+    'vid-1':   't5pR1D6mw',
+    'vid-2':   't5pR1D6mw',
+  };
+
+  function showSection(id) {
+    document.querySelectorAll('.section-block').forEach(b => b.classList.remove('visible'));
+    document.querySelectorAll('.sidebar-nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('visible');
+    event.currentTarget.classList.add('active');
+  }
+
+  function toggleLock(key, entryId) {
+    const lockEl = document.getElementById('lock-' + key);
+    const isOpen = lockEl.classList.contains('show');
+    // Close all others in this section first
+    document.querySelectorAll('.inline-lock.show').forEach(el => el.classList.remove('show'));
+    if (!isOpen) {
+      lockEl.classList.add('show');
+      const input = lockEl.querySelector('input');
+      if (input) setTimeout(() => input.focus(), 50);
+    }
+  }
+
+  function checkLock(key, entryId, contentId) {
+    const input = document.getElementById('pw-' + key);
+    const errEl = document.getElementById('err-' + key);
+    const val = input.value.trim();
+    if (val === passwords[key]) {
+      // Unlock
+      document.getElementById('lock-' + key).classList.remove('show');
+      document.getElementById('content-' + key).classList.add('open');
+      document.getElementById('badge-' + key).textContent = 'Unlocked';
+      document.getElementById('badge-' + key).className = 'le-badge free';
+      document.getElementById(entryId).classList.add('unlocked');
+      document.getElementById(entryId).onclick = null; // disable re-click
+      errEl.classList.remove('show');
+    } else {
+      errEl.classList.add('show');
+      input.value = '';
+      input.focus();
+    }
+  }
+</script>
+</body>
+</html>
